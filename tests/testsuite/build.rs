@@ -1553,6 +1553,30 @@ fn crate_authors_env_vars() {
     p.cargo("test -v").run();
 }
 
+#[test]
+fn vv_prints_rustc_env_vars() {
+    let p = project()
+        .file(
+            "Cargo.toml",
+            r#"
+            [project]
+            name = "foo"
+            version = "0.0.1"
+            authors = ["mike@example.com"]
+        "#,
+        )
+        .file("src/main.rs", "fn main() { error }")
+        .build();
+
+    p.cargo("build -vv")
+        .with_stderr_contains(
+            "[RUNNING] `[..]CARGO_PKG_AUTHORS='mike@example.com'[..]rustc [..]`"
+        ).with_stderr_contains(
+            "  process didn't exit successfully: [..]CARGO_PKG_AUTHORS='mike@example.com'[..]rustc [..]"
+        )
+        .run();
+}
+
 // The tester may already have LD_LIBRARY_PATH=::/foo/bar which leads to a false positive error
 fn setenv_for_removing_empty_component(mut execs: Execs) -> Execs {
     let v = dylib_path_envvar();
