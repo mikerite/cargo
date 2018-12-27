@@ -1574,13 +1574,13 @@ fn vv_prints_rustc_env_vars() {
         b.with_stderr_contains(
             "[RUNNING] `[..]set CARGO_PKG_NAME=foo && [..]rustc [..]`"
         ).with_stderr_contains(
-            "[RUNNING] `[..]set CARGO_PKG_AUTHORS='escape='\\''\"@example.com' && [..]rustc [..]`"
+            r#"[RUNNING] `[..]set CARGO_PKG_AUTHORS="escape='\"@example.com" && [..]rustc [..]`"#
         )
     } else {
         b.with_stderr_contains(
             "[RUNNING] `[..]CARGO_PKG_NAME=foo [..]rustc [..]`"
         ).with_stderr_contains(
-            "[RUNNING] `[..]CARGO_PKG_AUTHORS='escape='\\''\"@example.com' [..]rustc [..]`"
+            r#"[RUNNING] `[..]CARGO_PKG_AUTHORS='escape='\''"@example.com' [..]rustc [..]`"#
         )
     };
         
